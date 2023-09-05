@@ -91,7 +91,7 @@ img:hover {
 
 .sitemap:hover,
 .page:hover {
-    border-color: aliceblue;
+    border-color: white;
     border-radius: 13px;
     transition: 500ms;
     box-shadow: 1px 1px 5px yellow;
