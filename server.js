@@ -136,13 +136,22 @@ app.get('/', ensureAuthenticated, async (req, res) => {
 
 // Define another route for handling the root URL ('/') - this seems to be a duplicate
 // It should be noted that only one of these route handlers will be executed since they both handle the same URL.
+// made with knowledge gained from tutorial Jayatilake, N. (2023) How to get started with mongodb in 10 minutes, 
+// freeCodeCamp.org. Available at: https://www.freecodecamp.org/news/learn-mongodb-a4ce205e7739/ (Accessed: 27 August 2023). 
 app.get('/', ensureAuthenticated, async (req, res) => {
+    // ensureAuthenticated is a middle ware function that ensures that users who are not signed in will be redirected to 
+    // login page and that only users who are autneticated gets access
     try {
         const stocks = await Stock.find({ user: req.user._id });
+        // the Stock.find( ) is a mongoose method to find the stocks of a user with a specific user id from mongodb
+        // database
 
         // Calculate chart data and create a chart (not included in the code, likely handled by a front-end library)
         const chartLabels = stocks.map(stock => stock.symbol);
+        // chartLabels maps over all the data in the stock database of the user and retreives the stock symbol
         const chartData = stocks.map(stock => stock.qty * stock.symbolValue);
+     // chartLabels maps over all the data in the stock database of the user and retreives the stock price and multiplies it
+    //  with the quantity of stock entered by the user
 
         // Render the 'index' template with additional chart data
         res.render('index', { stocks, chartLabels, chartData });
@@ -155,9 +164,12 @@ app.get('/', ensureAuthenticated, async (req, res) => {
 // Define a route for adding stocks to a user's portfolio
 app.post('/addStock', ensureAuthenticated, async (req, res) => {
     const { symbol, qty } = req.body;
+    // destructures the data from the body object and retreives only the symbol of the stock 
+    // the user entered and the quantity
     try {
         const userStocks = await Stock.find({ user: req.user._id });
         if (userStocks.length >= 5) {
+            // code for loop to limit user stock entries to 5.
             return res.status(400).send('Maximum stock limit reached');
         }
 
