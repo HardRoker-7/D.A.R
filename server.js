@@ -55,7 +55,9 @@ const userSchema = new mongoose.Schema({
     password: String,
 });
 
-// Method for validating user passwords using bcrypt
+// Method for validating user passwords using bcrypt made with knowledge gained from reading documentation about bcrypt
+// // Dan Arias (2018). Hashing in Action: Understanding bcrypt. [online] Auth0 - Blog. 
+// Available at: https://auth0.com/blog/hashing-in-action-understanding-bcrypt/. 
 userSchema.methods.validatePassword = async function (password) {
     return await bcrypt.compare(password, this.password);
 };
@@ -96,7 +98,9 @@ passport.deserializeUser(async (id, done) => {
     }
 });
 
-// Define a route for handling the root URL ('/')
+// Define a route for handling the root URL ('/') made with input gleaned from
+// MongoDB Crash Course (2021). YouTube. 28 September. Available at: https://www.youtube.com/watch?v=ofme2o29ngU 
+// (Accessed: 04 September 2023). 
 app.get('/', ensureAuthenticated, async (req, res) => {
     try {
         const stocks = await Stock.find({ user: req.user._id });
@@ -150,8 +154,8 @@ app.get('/', ensureAuthenticated, async (req, res) => {
         const chartLabels = stocks.map(stock => stock.symbol);
         // chartLabels maps over all the data in the stock database of the user and retreives the stock symbol
         const chartData = stocks.map(stock => stock.qty * stock.symbolValue);
-     // chartLabels maps over all the data in the stock database of the user and retreives the stock price and multiplies it
-    //  with the quantity of stock entered by the user
+        // chartLabels maps over all the data in the stock database of the user and retreives the stock price and multiplies it
+        //  with the quantity of stock entered by the user
 
         // Render the 'index' template with additional chart data
         res.render('index', { stocks, chartLabels, chartData });
